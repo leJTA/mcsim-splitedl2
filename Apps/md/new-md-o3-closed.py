@@ -12,9 +12,9 @@ pts.skip_all_instrs           = false
 pts.simulate_only_data_caches = false
 pts.show_l2_stat_per_interval = false
 
-pts.num_hthreads             = 1
+pts.num_hthreads             = 2
 pts.num_hthreads_per_l1$     = 1
-pts.num_l1$_per_l2$          = 1
+pts.num_l1$_per_l2$          = 2
 pts.num_mcs                  = 1
 # display simulation statistics when every pts.print_interval
 # instruction is executed.

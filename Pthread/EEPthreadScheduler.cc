@@ -1,6 +1,7 @@
 #include "EEPthreadScheduler.h"
 #include <assert.h>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -28,36 +29,6 @@ PthreadScheduler::PthreadScheduler(uint32_t port_num_):
   num_barrier_wait(0),
   port_num(port_num_), skip_first(0), first_instrs(0), agile_bank_th(0)
 {
-  /*for (uint32_t i = 0; i < argc; i++)
-  {
-    if (argv[i] == string("-port"))
-    {
-      i++;
-      port_num = atoi(argv[i]);
-    }
-    else if (argv[i] == string("-skip_first"))
-    {
-      i++;
-      skip_first = atol(argv[i]);
-    }
-    else if (argv[i] == string("-h"))
-    {
-      cout << " usage: -port port_num -skip_first instrs -h" << endl;
-      exit(1);
-    }
-    else if (argv[i] == string("--"))
-    {
-      break;
-    }
-  }
-
-  cout << "  -- {" << setw(5) << port_num << "} cmd: ";
-  for (uint32_t i = 0; i < argc; i++)
-  {
-    cout << argv[i] << " ";
-  }
-  cout << endl;*/
-
   pts          = new PthreadTimingSimulator(port_num);
   hth_to_pth   = vector<pthread_queue_t::iterator>(pts->num_hthreads);
 
@@ -69,7 +40,6 @@ PthreadScheduler::PthreadScheduler(uint32_t port_num_):
   repeat_playing     = pts->get_param_bool("pts.repeat_playing", false);
   num_page_allocated = 0;
 }
-
 
 
 PthreadScheduler::~PthreadScheduler()
@@ -90,126 +60,147 @@ PthreadScheduler::~PthreadScheduler()
 
 
 
-void PthreadScheduler::PlayTraces(const string & trace_name, uint64_t trace_skip_first)
+void PthreadScheduler::PlayTraces(const string& trace_list, uint64_t trace_skip_first)
 {
   std::cout << "  ==============[ Playing traces ]==============" << std::endl;
   uint64_t num_sent_instrs = 0;
   do
     {
-    ifstream trace_file(trace_name.c_str(), ios::binary);
-    ifstream page_acc_file;
-    addr_perc.clear();
-    if (trace_file.fail())
+    istringstream strm(trace_list);
+
+    std::vector<string> trace_names;
+    std::vector<ifstream*> trace_files;
+
     {
-      cout << "failed to open " << trace_name << endl;
-      return;
+      string temp;
+      while (getline(strm, temp, ';')) {
+        trace_names.push_back(temp);
+      }
     }
-    if (agile_bank_th > 0 && agile_bank_th < 1)
-    {
-      string page_acc_file_name(trace_name);
-      page_acc_file_name = page_acc_file_name.substr(0, page_acc_file_name.rfind("."));
-      page_acc_file_name+= ".page.acc.sorted";
-      page_acc_file.open(page_acc_file_name.c_str());
-      if (page_acc_file.fail())
+
+    // ifstream trace_file(trace_name.c_str(), ios::binary);
+    for (int i = 0; i < trace_names.size(); ++i) {
+      trace_files.push_back(new ifstream(trace_names[i].c_str(), ios::binary));
+      std::cout << "### " << trace_names[i] << "###" << std::endl;
+    }
+    
+    // ifstream page_acc_file;
+    std::vector<ifstream> page_acc_files;
+    addr_perc.clear();
+
+    for (int i = 0; i < trace_files.size(); ++i) {
+      if (trace_files[i]->fail())
       {
-        cout << "failed to open " << page_acc_file_name << endl;
+        cout << "failed to open " << trace_names[i] << endl;
         return;
       }
-      string line;
-      istringstream sline;
-      uint32_t num_line = 0;
-      uint64_t addr;
-      while (getline(page_acc_file, line))
+      
+      if (agile_bank_th > 0 && agile_bank_th < 1)
       {
-        if (line.empty() == true || line[0] == '#') continue;
-        sline.clear();
-        sline.str(line);
-        sline >> hex >> addr;
-        addr_perc.insert(pair<uint64_t, double>(addr >> page_sz_log2, ++num_line));
-      }
-      for (map<uint64_t, double>::iterator iter = addr_perc.begin(); iter != addr_perc.end(); ++iter)
-      {
-        iter->second = iter->second / num_line;
+        std::cerr << "agile_bank_th != 0 not supported... exit" << std::endl;
+        exit(-1);
+        /*
+        string page_acc_file_name(trace_names[i]);
+        page_acc_file_name = page_acc_file_name.substr(0, page_acc_file_name.rfind("."));
+        page_acc_file_name += ".page.acc.sorted";
+        page_acc_files[i].open(page_acc_file_name.c_str());
+        if (page_acc_files[i].fail())
+        {
+          cout << "failed to open " << page_acc_file_name << endl;
+          return;
+        }
+        string line;
+        istringstream sline;
+        uint32_t num_line = 0;
+        uint64_t addr;
+        while (getline(page_acc_files[i], line))
+        {
+          if (line.empty() == true || line[0] == '#') continue;
+          sline.clear();
+          sline.str(line);
+          sline >> hex >> addr;
+          addr_perc.insert(pair<uint64_t, double>(addr >> page_sz_log2, ++num_line));
+        }
+        for (map<uint64_t, double>::iterator iter = addr_perc.begin(); iter != addr_perc.end(); ++iter)
+        {
+          iter->second = iter->second / num_line;
+        }
+        */
       }
     }
 
-    // PTSInstrTrace * instrs = new PTSInstrTrace[instr_group_size];
-    // const size_t maxCompressedLength = snappy::MaxCompressedLength(sizeof(PTSInstrTrace)*instr_group_size);  
-    // size_t * compressed_length = new size_t;
-    // (*compressed_length) = 0;
-    // char * compressed = new char[maxCompressedLength];
-    while (trace_file.eof() == false)
-    {
-      // trace_file.read((char *)compressed_length, sizeof(size_t));
-      // trace_file.read(compressed, *compressed_length);
-      // if (snappy::RawUncompress(compressed, *compressed_length, (char *)instrs) == false)
-      // {
-      //   cout << "file " << trace_name << " is corrupted" << endl;
-      //   trace_file.close();
-      //   return;
-      // }
-      // for (uint32_t i = 0; i < instr_group_size; i++)
-      // {
-        // PTSInstrTrace & curr_instr = instrs[i];
-        PTSInstrTrace curr_instr;
-        trace_file.read((char*)&curr_instr, sizeof(PTSInstrTrace));
-        if (agile_bank_th >= 1.0)
-        {
-          if (curr_instr.raddr  != 0) curr_instr.raddr  |= ((uint64_t)1 << 63);
-          if (curr_instr.raddr2 != 0) curr_instr.raddr2 |= ((uint64_t)1 << 63);
-          if (curr_instr.waddr  != 0) curr_instr.waddr  |= ((uint64_t)1 << 63);
-        }
-        else if (agile_bank_th > 0)
-        {
-          if (curr_instr.raddr != 0 &&
-              addr_perc.find(curr_instr.raddr >> page_sz_log2) != addr_perc.end() &&
-              addr_perc[curr_instr.raddr >> page_sz_log2] < agile_bank_th)
-          {
-            curr_instr.raddr |= ((uint64_t)1 << 63);
+    const int block_length = 500;
+    while (!trace_files.empty()) {
+      for(int i = 0; i < trace_files.size(); ++i) {
+        for (int j = 0; j < block_length; ++j) {
+          if (trace_files[i]->eof()) {
+            delete trace_files[i];
+            trace_files.erase(trace_files.begin() + i);
+            --i;
+            break;
           }
-          if (curr_instr.raddr2 != 0 &&
-              addr_perc.find(curr_instr.raddr2 >> page_sz_log2) != addr_perc.end() &&
-              addr_perc[curr_instr.raddr2 >> page_sz_log2] < agile_bank_th)
-          {
-            curr_instr.raddr2 |= ((uint64_t)1 << 63);
-          }
-          if (curr_instr.waddr != 0 &&
-              addr_perc.find(curr_instr.waddr >> page_sz_log2) != addr_perc.end() &&
-              addr_perc[curr_instr.waddr >> page_sz_log2] < agile_bank_th)
-          {
-            curr_instr.waddr |= ((uint64_t)1 << 63);
-          }
-          if (curr_instr.ip != 0 &&
-              addr_perc.find(curr_instr.ip >> page_sz_log2) != addr_perc.end() &&
-              addr_perc[curr_instr.ip >> page_sz_log2] < agile_bank_th)
-          {
-            curr_instr.ip |= ((uint64_t)1 << 63);
-          }
-        }
+          else {
+            PTSInstrTrace curr_instr;
+            trace_files[i]->read((char*)&curr_instr, sizeof(PTSInstrTrace));
+            if (agile_bank_th >= 1.0)
+            {
+              if (curr_instr.raddr  != 0) curr_instr.raddr  |= ((uint64_t)1 << 63);
+              if (curr_instr.raddr2 != 0) curr_instr.raddr2 |= ((uint64_t)1 << 63);
+              if (curr_instr.waddr  != 0) curr_instr.waddr  |= ((uint64_t)1 << 63);
+            }
+            else if (agile_bank_th > 0)
+            {
+              if (curr_instr.raddr != 0 &&
+                  addr_perc.find(curr_instr.raddr >> page_sz_log2) != addr_perc.end() &&
+                  addr_perc[curr_instr.raddr >> page_sz_log2] < agile_bank_th)
+              {
+                curr_instr.raddr |= ((uint64_t)1 << 63);
+              }
+              if (curr_instr.raddr2 != 0 &&
+                  addr_perc.find(curr_instr.raddr2 >> page_sz_log2) != addr_perc.end() &&
+                  addr_perc[curr_instr.raddr2 >> page_sz_log2] < agile_bank_th)
+              {
+                curr_instr.raddr2 |= ((uint64_t)1 << 63);
+              }
+              if (curr_instr.waddr != 0 &&
+                  addr_perc.find(curr_instr.waddr >> page_sz_log2) != addr_perc.end() &&
+                  addr_perc[curr_instr.waddr >> page_sz_log2] < agile_bank_th)
+              {
+                curr_instr.waddr |= ((uint64_t)1 << 63);
+              }
+              if (curr_instr.ip != 0 &&
+                  addr_perc.find(curr_instr.ip >> page_sz_log2) != addr_perc.end() &&
+                  addr_perc[curr_instr.ip >> page_sz_log2] < agile_bank_th)
+              {
+                curr_instr.ip |= ((uint64_t)1 << 63);
+              }
+            }
 
-        if (num_sent_instrs++ >= trace_skip_first)
-        {
-          process_ins(
-            NULL,
-            curr_instr.ip,
-            curr_instr.raddr,
-            curr_instr.raddr2,
-            curr_instr.rlen,
-            curr_instr.waddr,
-            curr_instr.wlen,
-            curr_instr.isbranch,
-            curr_instr.isbranchtaken,
-            curr_instr.category,
-            curr_instr.rr0,
-            curr_instr.rr1,
-            curr_instr.rr2,
-            curr_instr.rr3,
-            curr_instr.rw0,
-            curr_instr.rw1,
-            curr_instr.rw2,
-            curr_instr.rw3);
+            if (num_sent_instrs++ >= trace_skip_first)
+            {
+              process_ins(
+                NULL,
+                curr_instr.ip,
+                curr_instr.raddr,
+                curr_instr.raddr2,
+                curr_instr.rlen,
+                curr_instr.waddr,
+                curr_instr.wlen,
+                curr_instr.isbranch,
+                curr_instr.isbranchtaken,
+                curr_instr.category,
+                curr_instr.rr0,
+                curr_instr.rr1,
+                curr_instr.rr2,
+                curr_instr.rr3,
+                curr_instr.rw0,
+                curr_instr.rw1,
+                curr_instr.rw2,
+                curr_instr.rw3);
+            }
+          }
         }
-      // }
+      }
     }
   } while (repeat_playing == true);
 }
@@ -244,7 +235,7 @@ void PthreadScheduler::AddThread(
 {
   ASSERTX(pthreads.find(thread) == pthreads.end());
   pthreads[thread] = new Pthread(attr, startctxt, func, arg, curr_time, pts);
-  if (pthreads.size() == 1) 
+  if (pthreads.size() == 1)
   {
     current = pthreads.begin();
   }
