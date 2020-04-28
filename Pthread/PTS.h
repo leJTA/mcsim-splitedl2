@@ -184,6 +184,7 @@ namespace PinPthread
       uint32_t           num_piled_instr;      // in this object
       uint32_t           num_hthreads;
       uint32_t        *  num_available_slot;   // in the timing simulator
+      int                internal_pid;         // pid in this timing simulator
 
     private:
       void send_instr_batch();

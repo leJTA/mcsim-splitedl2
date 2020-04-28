@@ -46,6 +46,7 @@ int main(int argc, char * argv[])
   bool   run_manually = false;
   uint64_t remap_interval = 0;
   string remapfile;
+  int num_proc_per_hthread = 1;
   for (int i = 0; i < argc; i++)
   {
     if (argv[i] == string("-mdfile"))
@@ -78,6 +79,10 @@ int main(int argc, char * argv[])
     {
       i++;
       remapfile = argv[i];
+    }
+    else if (argv[i] == string("-num_proc_per_hthread")) {
+      ++i;
+      num_proc_per_hthread = atoi(argv[i]);
     }
   }
 
@@ -463,13 +468,17 @@ int main(int argc, char * argv[])
         for (uint32_t i = 0; i < num_instrs; i++)
         {
           PTSInstr * ptsinstr = &(pts_m->val.instr[i]);
+          uint64_t real_pid = (uint64_t)(curr_pid * num_proc_per_hthread + pts_m->uint64_t_val);  // pts_m->uint64_t_val == pts->internal_pid
+
+          // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@ proc number " << real_pid << " @@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
+          
           num_available_slot = pts->mcsim->add_instruction(
             old_mapping_inv[curr_p->tid_to_htid + ptsinstr->hthreadid_],
             ptsinstr->curr_time_,
-            ptsinstr->waddr + (ptsinstr->waddr  == 0 ? 0 : ((((uint64_t)curr_pid) << addr_offset_lsb) + (((uint64_t)curr_pid) << interleave_base_bit))),
+            ptsinstr->waddr + (ptsinstr->waddr  == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->wlen,
-            ptsinstr->raddr + (ptsinstr->raddr  == 0 ? 0 : ((((uint64_t)curr_pid) << addr_offset_lsb) + (((uint64_t)curr_pid) << interleave_base_bit))),
-            ptsinstr->raddr2+ (ptsinstr->raddr2 == 0 ? 0 : ((((uint64_t)curr_pid) << addr_offset_lsb) + (((uint64_t)curr_pid) << interleave_base_bit))),
+            ptsinstr->raddr + (ptsinstr->raddr  == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
+            ptsinstr->raddr2+ (ptsinstr->raddr2 == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->rlen,
             ptsinstr->ip, // + ((((uint64_t)curr_pid) << addr_offset_lsb) + (((uint64_t)curr_pid) << interleave_base_bit)),
             ptsinstr->category,

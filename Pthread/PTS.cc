@@ -154,6 +154,7 @@ bool PthreadTimingSimulator::add_instruction(
   }
   num_piled_instr++;
   ptsmessage->uint32_t_val = num_piled_instr;
+  ptsmessage->uint64_t_val = internal_pid;
 
   /*if (curr_time_ >= 12100000)
   {

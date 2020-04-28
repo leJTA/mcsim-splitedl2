@@ -66,12 +66,12 @@ void PthreadScheduler::PlayTraces(const string& trace_list, uint64_t trace_skip_
   uint64_t num_sent_instrs = 0;
   do
     {
-    istringstream strm(trace_list);
-
     std::vector<string> trace_names;
     std::vector<ifstream*> trace_files;
 
+
     {
+      istringstream strm(trace_list);
       string temp;
       while (getline(strm, temp, ';')) {
         trace_names.push_back(temp);
@@ -178,6 +178,7 @@ void PthreadScheduler::PlayTraces(const string& trace_list, uint64_t trace_skip_
 
             if (num_sent_instrs++ >= trace_skip_first)
             {
+              pts->internal_pid = i;
               process_ins(
                 NULL,
                 curr_instr.ip,
