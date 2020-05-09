@@ -7,7 +7,6 @@
 #include <set>
 #include <stdlib.h>
 #include <stdint.h>
-#include <snappy.h>
 
 #include "pin.H"
 
@@ -15,6 +14,7 @@ using namespace std;
 
 uint64_t num_instrs;
 uint64_t slice_size;
+uint64_t max_instrs;
 string   prefix_name;
 set<uint64_t> slice_index;
 set<uint64_t>::iterator slice_index_iter;
@@ -88,7 +88,11 @@ VOID Init(uint32_t argc, char** argv)
   // compressed_length = new size_t;
   for (uint32_t i = 0; i < argc; i++)
   {
-    if (argv[i] == string("-prefix"))
+    if (argv[i] == string("-max_instrs")) {
+      ++i;
+      max_instrs = atol(argv[i]);
+    }
+    else if (argv[i] == string("-prefix"))
     {
       i++;
       prefix_name = string(argv[i]);
@@ -192,7 +196,11 @@ VOID ProcessMemIns(
 
   num_instrs++;
   curr_file.write((char*)&curr_instr, sizeof(PTSInstrTrace));
-  
+
+  if (num_instrs >= max_instrs) {
+    std::cout << "Max number of instruction reached" << std::endl;
+    exit(0);
+  }
   // if ((num_instrs % instr_group_size) == 0) {
   //   snappy::RawCompress((char *)instrs, sizeof(PTSInstrTrace) * instr_group_size, compressed, compressed_length);
   //   curr_file.write((char *)compressed_length, sizeof(size_t));
