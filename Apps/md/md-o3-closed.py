@@ -1,8 +1,8 @@
-# By default, the unit of timing parameters is 'tick', not 'cycle'.
+'# By default, the unit of timing parameters is 'tick', not 'cycle'.
 
 # if the application does not finish until it executes 'max_total_instrs',
 # the simulation quits.
-max_total_instrs             = 1000000000
+max_total_instrs             = 10000000000
 # stack size per hardware thread
 stack_sz                     = 2^23
 addr_offset_lsb              = 48
@@ -68,7 +68,7 @@ pts.l1d$.num_sets_per_subarray = 8
 pts.l1d$.always_hit         = false
 
 pts.l2$.num_sets            = 1024
-pts.l2$.num_ways            = 64
+pts.l2$.num_ways            = 8
 pts.l2$.set_lsb             = 6
 pts.l2$.process_interval    = 10
 pts.l2$.to_l1_t             = 40

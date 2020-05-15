@@ -376,12 +376,6 @@ McSim::McSim(PthreadTimingSimulator * pts_)
 
       for (uint32_t i = 0; i < num_hthreads / num_threads_per_l1_cache / num_l1_caches_per_l2_cache; i++)
       {
-        if (use_rbol == true)
-        {
-          std::cerr << "Error : rbol not implemented " << std::endl;
-          exit(1);
-        }
-
         l2is[i]->directory = (dirs[2 * i]);
         l2ds[i]->directory = (dirs[2 * i + 1]);
 
@@ -563,6 +557,15 @@ McSim::~McSim()
     delete (*iter);
   }
   for (vector<CacheL1 *>::iterator iter = l1ds.begin(); iter != l1ds.end(); ++iter)
+  {
+    delete (*iter);
+  }
+
+  for (vector<TLBL1 *>::iterator iter = tlbl1is.begin(); iter != tlbl1is.end(); ++iter)
+  {
+    delete (*iter);
+  }
+  for (vector<TLBL1 *>::iterator iter = tlbl1ds.begin(); iter != tlbl1ds.end(); ++iter)
   {
     delete (*iter);
   }

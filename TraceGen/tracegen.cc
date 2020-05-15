@@ -197,7 +197,7 @@ VOID ProcessMemIns(
   num_instrs++;
   curr_file.write((char*)&curr_instr, sizeof(PTSInstrTrace));
 
-  if (num_instrs >= max_instrs) {
+  if (num_instrs == max_instrs) {
     std::cout << "Max number of instruction reached" << std::endl;
     exit(0);
   }

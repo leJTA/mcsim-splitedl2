@@ -536,6 +536,15 @@ McSim::~McSim()
     delete (*iter);
   }
 
+  for (vector<TLBL1 *>::iterator iter = tlbl1is.begin(); iter != tlbl1is.end(); ++iter)
+  {
+    delete (*iter);
+  }
+  for (vector<TLBL1 *>::iterator iter = tlbl1ds.begin(); iter != tlbl1ds.end(); ++iter)
+  {
+    delete (*iter);
+  }
+
 
   delete global_q;
 }

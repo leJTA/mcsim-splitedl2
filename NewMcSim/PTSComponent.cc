@@ -245,6 +245,7 @@ uint32_t GlobalEventQueue::process_event()
         case ct_mesh:
         case ct_ring:
           p_comp = *comp_iter;
+
           p_comp->process_event(curr_time);
           
           event_queue.begin()->second.erase(comp_iter);
