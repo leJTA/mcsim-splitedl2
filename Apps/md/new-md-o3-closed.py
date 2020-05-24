@@ -47,7 +47,7 @@ pts.o3core.max_issue_width     = 8
 pts.o3core.max_commit_width    = 8
 
 pts.l1i$.num_sets           = 16
-pts.l1i$.num_ways           = 4
+pts.l1i$.num_ways           = 8
 # which part of the address is mapped into a set
 pts.l1i$.set_lsb            = 6
 pts.l1i$.process_interval   = 10
@@ -59,7 +59,7 @@ pts.l1i$.always_hit         = false
 
 pts.l1d$.num_banks          = 4
 pts.l1d$.num_sets           = 16
-pts.l1d$.num_ways           = 4
+pts.l1d$.num_ways           = 8
 pts.l1d$.set_lsb            = 6
 pts.l1d$.process_interval   = 10
 pts.l1d$.to_lsu_t           = 4 
@@ -68,7 +68,7 @@ pts.l1d$.num_sets_per_subarray = 8
 pts.l1d$.always_hit         = false
 
 pts.l2i$.num_sets            = 512
-pts.l2i$.num_ways            = 8
+pts.l2i$.num_ways            = 4
 pts.l2i$.set_lsb             = 6
 pts.l2i$.process_interval    = 10
 pts.l2i$.to_l1_t             = 40
@@ -80,7 +80,7 @@ pts.l2i$.num_sets_per_subarray = 16
 pts.l2i$.always_hit          = false
 
 pts.l2d$.num_sets            = 512
-pts.l2d$.num_ways            = 8
+pts.l2d$.num_ways            = 4
 pts.l2d$.set_lsb             = 6
 pts.l2d$.process_interval    = 10
 pts.l2d$.to_l1_t             = 40

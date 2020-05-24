@@ -368,34 +368,12 @@ McSim::McSim(PthreadTimingSimulator * pts_)
       noc = new Crossbar(ct_crossbar, 0, this, (2 * num_hthreads) / num_threads_per_l1_cache / num_l1_caches_per_l2_cache);
 
       // instantiate directories
-      // currently it is assumed that (# of MCs) == (# of L2$Ds) == (# of L2$Is) == (2 * # of directories)
-      for (uint32_t i = 0; i < (num_hthreads * 2) / num_threads_per_l1_cache / num_l1_caches_per_l2_cache; i++) {
-        dirs.push_back(new Directory(ct_directory, i, this));
-        mcs.push_back(new MemoryController(ct_memory_controller, i, this));
-      }
-
+      // currently it is assumed that (# of MCs) == (# of L2$Ds) == (# of L2$Is) == (# of directories)
       for (uint32_t i = 0; i < num_hthreads / num_threads_per_l1_cache / num_l1_caches_per_l2_cache; i++)
       {
-        l2is[i]->directory = (dirs[2 * i]);
-        l2ds[i]->directory = (dirs[2 * i + 1]);
+        dirs.push_back(new Directory(ct_directory, i, this));
+        mcs.push_back(new MemoryController(ct_memory_controller, i, this));
 
-        l2is[i]->crossbar  = noc;
-        l2ds[i]->crossbar  = noc;
-
-        noc->directory.push_back(dirs[2 * i]);
-        noc->directory.push_back(dirs[2 * i + 1]);
-
-        noc->cachel2.push_back(l2is[i]);
-        noc->cachel2.push_back(l2ds[i]);
-
-        dirs[2 * i]->cachel2  = (l2is[i]);
-        dirs[2 * i + 1]->cachel2  = (l2ds[i]);
-
-        dirs[2 * i]->crossbar = noc;
-        dirs[2 * i + 1]->crossbar = noc;
-      }
-
-      for (uint32_t i = 0; i < (num_hthreads * 2) / num_threads_per_l1_cache / num_l1_caches_per_l2_cache; i++) {
         if (use_rbol == true)
         {
           std::cerr << "Error : rbol not implemented " << std::endl;
@@ -405,6 +383,22 @@ McSim::McSim(PthreadTimingSimulator * pts_)
           dirs[i]->memorycontroller = (mcs[i]);
           mcs[i]->directory = (dirs[i]);
         }
+
+        l2is[i]->directory = (dirs[i]);
+        l2ds[i]->directory = (dirs[i]);
+
+        l2is[i]->crossbar  = noc;
+        l2ds[i]->crossbar  = noc;
+
+        noc->directory.push_back(dirs[i]);
+
+        noc->cachel2i.push_back(l2is[i]);
+        noc->cachel2d.push_back(l2ds[i]);
+
+        dirs[i]->cachel2i  = (l2is[i]);
+        dirs[i]->cachel2d  = (l2ds[i]);
+
+        dirs[i]->crossbar = noc;
       }
     }
   }

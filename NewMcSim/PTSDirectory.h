@@ -60,7 +60,8 @@ namespace PinPthread
 
       //MemoryController * memorycontroller;  // downlink
       Component * memorycontroller;  // downlink
-      CacheL2          * cachel2;           // uplink
+      CacheL2          * cachel2i;           // uplink
+      CacheL2          * cachel2d;          // uplink
       NoC              * crossbar;          // uplink
 
       const uint32_t set_lsb;

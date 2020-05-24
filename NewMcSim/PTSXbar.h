@@ -48,7 +48,8 @@ namespace PinPthread
       virtual ~NoC();
 
       vector<Directory *> directory;
-      vector<CacheL2   *> cachel2;
+      vector<CacheL2   *> cachel2i;
+      vector<CacheL2   *> cachel2d;
       uint64_t num_req, num_rep, num_crq, num_flits;
       uint64_t num_data_transfers;
 

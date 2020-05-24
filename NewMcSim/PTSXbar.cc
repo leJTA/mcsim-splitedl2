@@ -42,7 +42,7 @@ NoC::NoC(
     component_type type_,
     uint32_t num_,
     McSim * mcsim_)
- :Component(type_, num_, mcsim_), directory(), cachel2(),
+ :Component(type_, num_, mcsim_), directory(), cachel2i(), cachel2d(),
   num_req(0), num_rep(0), num_crq(0), num_flits(0), num_data_transfers(0)
 {
 }
@@ -625,7 +625,15 @@ void Mesh2D::process_qs(
         uint32_t cluster_num = curr_q.first->from.top()->num;
         col = cluster_num % num_cols;
         row = cluster_num / num_cols;
-        to_l2 = cachel2[cluster_num];
+        if (curr_q.second->type == ct_cachel2i ||
+            curr_q.second->type == ct_cachel2i_t1 ||
+            curr_q.second->type == ct_cachel2i_t2)
+        {
+          to_l2 = cachel2i[cluster_num];
+        }
+        else {
+          to_l2 = cachel2d[cluster_num];
+        }
       }
       break;
     case noc_crq:
@@ -633,7 +641,15 @@ void Mesh2D::process_qs(
       uint32_t cluster_num = curr_q.first->from.top()->num;
       col = cluster_num % num_cols;
       row = cluster_num / num_cols;
-      to_l2 = cachel2[cluster_num];
+      if (curr_q.second->type == ct_cachel2i ||
+          curr_q.second->type == ct_cachel2i_t1 ||
+          curr_q.second->type == ct_cachel2i_t2)
+      {
+        to_l2 = cachel2i[cluster_num];
+      }
+      else {
+        to_l2 = cachel2d[cluster_num];
+      }
       }
       break;
     case noc_req:
@@ -1073,7 +1089,15 @@ void Ring::process_qs(
         uint32_t cluster_num = curr_q.first->from.top()->num;
         target_pos = l2_pos[cluster_num];
         target_port_num = l2_port_num[cluster_num];
-        to_l2 = cachel2[cluster_num];
+        if (curr_q.second->type == ct_cachel2i ||
+            curr_q.second->type == ct_cachel2i_t1 ||
+            curr_q.second->type == ct_cachel2i_t2)
+        {
+          to_l2 = cachel2i[cluster_num];
+        }
+        else {
+          to_l2 = cachel2d[cluster_num];
+        }
       }
       break;
     case noc_crq:
@@ -1081,7 +1105,15 @@ void Ring::process_qs(
         uint32_t cluster_num = curr_q.first->from.top()->num;
         target_pos = l2_pos[cluster_num];
         target_port_num = l2_port_num[cluster_num];
-        to_l2 = cachel2[cluster_num];
+        if (curr_q.second->type == ct_cachel2i ||
+            curr_q.second->type == ct_cachel2i_t1 ||
+            curr_q.second->type == ct_cachel2i_t2)
+        {
+          to_l2 = cachel2i[cluster_num];
+        }
+        else {
+          to_l2 = cachel2d[cluster_num];
+        }
       }
       break;
     case noc_req:

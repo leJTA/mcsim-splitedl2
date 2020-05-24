@@ -947,9 +947,12 @@ void Directory::add_event_to_UL(
     LocalQueueElement * lqe,
     bool is_data)
 {
-  if (lqe->from.top() == cachel2)
+  if (lqe->from.top() == cachel2i)
   {
-    cachel2->add_rep_event(curr_time + dir_to_l2_t, lqe);
+    cachel2i->add_rep_event(curr_time + dir_to_l2_t, lqe);
+  }
+  else if (lqe->from.top() == cachel2d) {
+    cachel2d->add_rep_event(curr_time + dir_to_l2_t, lqe);
   }
   else
   {
@@ -971,9 +974,12 @@ void Directory::add_event_to_UL(
     Component * comp,
     LocalQueueElement * lqe)
 {
-  if (comp == cachel2)
+  if (lqe->from.top() == cachel2i)
   {
-    cachel2->add_rep_event(curr_time + dir_to_l2_t, lqe);
+    cachel2i->add_rep_event(curr_time + dir_to_l2_t, lqe);
+  }
+  else if (lqe->from.top() == cachel2d) {
+    cachel2d->add_rep_event(curr_time + dir_to_l2_t, lqe);
   }
   else
   {
@@ -988,9 +994,12 @@ void Directory::add_event_to_ULpp(
     LocalQueueElement * lqe,
     bool is_data)
 {
-  if (lqe->from.top() == cachel2)
+  if (lqe->from.top() == cachel2i)
   {
-    cachel2->add_rep_event(curr_time + dir_to_l2_t, lqe);
+    cachel2i->add_rep_event(curr_time + dir_to_l2_t, lqe);
+  }
+  else if (lqe->from.top() == cachel2d) {
+    cachel2d->add_rep_event(curr_time + dir_to_l2_t, lqe);
   }
   else
   {

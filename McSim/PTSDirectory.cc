@@ -955,7 +955,7 @@ void Directory::add_event_to_UL(
     Component * comp,
     LocalQueueElement * lqe)
 {
-  if (comp == cachel2)
+  if (lqe->from.top() == cachel2)
   {
     cachel2->add_rep_event(curr_time + dir_to_l2_t, lqe);
   }
