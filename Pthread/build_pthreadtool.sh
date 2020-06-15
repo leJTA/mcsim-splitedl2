@@ -1,4 +1,4 @@
 #!/bin/bash
 
 make clean
-make TOOLS_DIR=/home/armel/pin/source/tools -j 4
+make TOOLS_DIR=$HOME/pin/source/tools -j 4

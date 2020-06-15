@@ -1,3 +1,3 @@
 #!/bin/bash
 
-make TOOLS_DIR=/home/armel/pin/source/tools -j
+make TOOLS_DIR=$HOME/pin/source/tools -j

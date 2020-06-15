@@ -5,5 +5,5 @@ do
   args="$args $var"
 done
 
-/home/armel/pin/intel64/bin/pinbin -t /home/armel/pin/source/tools/ManualExamples/obj-intel64/inscount2.so -- $args
+$HOME/pin/intel64/bin/pinbin -t $HOME/pin/source/tools/ManualExamples/obj-intel64/inscount2.so -- $args
 cat inscount.out

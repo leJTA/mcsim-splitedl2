@@ -6,4 +6,4 @@ do
   args="$args $var"
 done
 
-/home/armel/pin/intel64/bin/pinbin -t /home/armel/mcsim/TraceGen/tracegen $args
+$HOME/pin/intel64/bin/pinbin -t $HOME/mcsim/TraceGen/tracegen $args
