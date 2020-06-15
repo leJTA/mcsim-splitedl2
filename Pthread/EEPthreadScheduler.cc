@@ -129,10 +129,10 @@ void PthreadScheduler::PlayTraces(const string& trace_list, uint64_t trace_skip_
       }
     }
 
-    const int block_length = 500;
+    const size_t block_length = 500;
     while (!trace_files.empty()) {
       for(int i = 0; i < trace_files.size(); ++i) {
-        for (int j = 0; j < block_length; ++j) {
+        for (size_t j = 0; j < block_length; ++j) {
           if (trace_files[i]->eof()) {
             delete trace_files[i];
             trace_files.erase(trace_files.begin() + i);

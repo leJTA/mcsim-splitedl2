@@ -158,6 +158,7 @@ VOID ProcessMemIns(
 {
   if (num_instrs == 0) {
     curr_file.open(string(prefix_name + ".trace").c_str(), ios::binary);
+    std::cout << "The size of an instruction is : " << sizeof(PTSInstrTrace) << std::endl;
     if (curr_file.fail())
     {
       cout << "failed to open " << prefix_name + ".trace" << endl;

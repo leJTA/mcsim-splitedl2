@@ -471,7 +471,7 @@ int main(int argc, char * argv[])
           uint64_t real_pid = (uint64_t)(curr_pid * num_proc_per_hthread + pts_m->uint64_t_val);  // pts_m->uint64_t_val == pts->internal_pid
 
           // std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@@ proc number " << real_pid << " @@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
-          
+
           num_available_slot = pts->mcsim->add_instruction(
             old_mapping_inv[curr_p->tid_to_htid + ptsinstr->hthreadid_],
             ptsinstr->curr_time_,
@@ -480,7 +480,7 @@ int main(int argc, char * argv[])
             ptsinstr->raddr + (ptsinstr->raddr  == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->raddr2+ (ptsinstr->raddr2 == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->rlen,
-            ptsinstr->ip, // + ((((uint64_t)curr_pid) << addr_offset_lsb) + (((uint64_t)curr_pid) << interleave_base_bit)),
+            ptsinstr->ip,// + ((((uint64_t)real_pid) << addr_offset_lsb) + (((uint64_t)real_pid) << interleave_base_bit)),
             ptsinstr->category,
             ptsinstr->isbranch,
             ptsinstr->isbranchtaken,
