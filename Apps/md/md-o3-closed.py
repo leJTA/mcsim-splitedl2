@@ -2,7 +2,7 @@
 
 # if the application does not finish until it executes 'max_total_instrs',
 # the simulation quits.
-max_total_instrs             = 10000000000
+max_total_instrs             = 2000000000000
 # stack size per hardware thread
 stack_sz                     = 2^23
 addr_offset_lsb              = 48
@@ -12,9 +12,9 @@ pts.skip_all_instrs           = false
 pts.simulate_only_data_caches = false
 pts.show_l2_stat_per_interval = false
 
-pts.num_hthreads             = 8
+pts.num_hthreads             = 10
 pts.num_hthreads_per_l1$     = 1
-pts.num_l1$_per_l2$          = 8
+pts.num_l1$_per_l2$          = 10
 pts.num_mcs                  = 1
 # display simulation statistics when every pts.print_interval
 # instruction is executed.

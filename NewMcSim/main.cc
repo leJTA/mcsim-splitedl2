@@ -378,9 +378,9 @@ int main(int argc, char * argv[])
   while (any_thread)
   {
     Programs * curr_p = &(programs[curr_pid]);
+    // std::cout << "Waiting for pid " << curr_pid << std::endl;
     recvfrom(curr_p->sockfd, curr_p->buffer, sizeof(PTSMessage), 0, (struct sockaddr *)&(curr_p->my_addr), &addr_len);
     PTSMessage * pts_m = (PTSMessage *)curr_p->buffer;
-
     if (pts->mcsim->num_fetched_instrs >= max_total_instrs ||
         num_th_passed_instr_count >= offset)
     {
@@ -480,7 +480,7 @@ int main(int argc, char * argv[])
             ptsinstr->raddr + (ptsinstr->raddr  == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->raddr2+ (ptsinstr->raddr2 == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->rlen,
-            ptsinstr->ip,// + ((((uint64_t)real_pid) << addr_offset_lsb) + (((uint64_t)real_pid) << interleave_base_bit)),
+            ptsinstr->ip, // + ((((uint64_t)(real_pid)) << addr_offset_lsb) + (((uint64_t)(real_pid)) << interleave_base_bit)),
             ptsinstr->category,
             ptsinstr->isbranch,
             ptsinstr->isbranchtaken,

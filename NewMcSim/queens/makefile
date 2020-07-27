@@ -3,7 +3,7 @@ OBJS = queens.o
 #CFLAGS = -O0 -g -ggdb -w  -Wall
 CFLAGS = -O3 -w -g -g -DNDEBUG -fno-builtin
 #LDFLAGS = -lpthread 
-LDFLAGS = ../../Pthread/libmypthread.a
+#LDFLAGS = ../../Pthread/libmypthread.a
 WRAPPER_OBJ = ../../Apps/mcsim_wrapper.o
 CC = gcc
 

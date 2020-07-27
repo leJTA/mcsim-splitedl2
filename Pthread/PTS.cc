@@ -51,6 +51,7 @@ PthreadTimingSimulator::PthreadTimingSimulator(const string & mdfile)
 PthreadTimingSimulator::PthreadTimingSimulator(int port_num)
  :num_piled_instr(0)
 {
+  internal_pid = 0;
   addr_len = sizeof(my_addr);
   sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   memset(&my_addr, 0, sizeof(my_addr));

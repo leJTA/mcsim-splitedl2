@@ -115,111 +115,6 @@ int set_problem_size(int argc, char** argv){
 /** main function                              **/
 /************************************************/
 int main(int argc, char *argv[]){
-
-/*
-*mmap(void *addr, size_t length, int prot, int flags,
-                  int fd, off_t offset);*/
-//unsigned long size = atoi(argv[1]);
-//unsigned char *toto = (unsigned char*)mmap(NULL,size,PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE,-1, 0);
-
-void *toto;
-
-toto=mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 2200456, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 33070, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 3933368, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 17592, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 2109704, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) ;
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) ;
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 2212904, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) ;
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 13352, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) ;
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 15232696, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 745472, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 175800, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 33070, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 3125544, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0); 
-if(toto == MAP_FAILED)
-  printf("failed \n");
-toto=mmap(NULL, 1052672, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-
-
-printf("done \n");
-
-if (toto == MAP_FAILED){
-  perror("mmap");
-  exit(1);
-}
-int i=0;
-
-#if 0
-for(i=0; i<size; i+=512){
-   toto[i] = 'A';
-}
-
-for(i=0; i<size; i+=512){
-  printf ("#%c", toto[i]);
-
-}
-printf("done %llu \n", size);
-
-
-exit(1);
   int i;
   int n    = set_problem_size(argc, argv);
   array *a = calloc(MAX, sizeof(array)); 
@@ -242,6 +137,5 @@ exit(1);
 
   print_result(n, get_time()-usec, answers);
   return 0;
-#endif
 }
 /************************************************/

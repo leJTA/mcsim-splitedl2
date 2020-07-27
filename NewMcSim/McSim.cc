@@ -785,7 +785,6 @@ uint32_t McSim::add_instruction(
   if (use_o3core == true)
   {
     O3Core * o3core = o3cores[hthreadid_];
-
     if (o3core->o3queue_size == 0)
     {
       if (o3core->resume_time <= curr_time_)

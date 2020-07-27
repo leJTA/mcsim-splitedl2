@@ -1,4 +1,3 @@
-
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -14,6 +13,7 @@ using namespace std;
 
 uint64_t num_instrs;
 uint64_t slice_size;
+uint64_t skip_instrs;
 uint64_t max_instrs;
 string   prefix_name;
 set<uint64_t> slice_index;
@@ -88,7 +88,11 @@ VOID Init(uint32_t argc, char** argv)
   // compressed_length = new size_t;
   for (uint32_t i = 0; i < argc; i++)
   {
-    if (argv[i] == string("-max_instrs")) {
+    if (argv[i] == string("-skip_instrs")) {
+      ++i;
+      skip_instrs = atol(argv[i]);
+    }
+    else if (argv[i] == string("-max_instrs")) {
       ++i;
       max_instrs = atol(argv[i]);
     }
@@ -156,7 +160,7 @@ VOID ProcessMemIns(
     UINT32  rw2,
     UINT32  rw3)
 {
-  if (num_instrs == 0) {
+  if (num_instrs++ == 0) {
     curr_file.open(string(prefix_name + ".trace").c_str(), ios::binary);
     std::cout << "The size of an instruction is : " << sizeof(PTSInstrTrace) << std::endl;
     if (curr_file.fail())
@@ -167,6 +171,11 @@ VOID ProcessMemIns(
     cout << endl;
     curr_index++;
   }
+
+  if (num_instrs < skip_instrs) { // skip the first skip_instrs instructions
+    return;
+  }
+
 
   // PTSInstrTrace& curr_instr = instrs[num_instrs % instr_group_size];
   PTSInstrTrace curr_instr;
@@ -195,10 +204,9 @@ VOID ProcessMemIns(
   // std::cout << curr_instr.raddr << std::endl;
   // std::cout << curr_instr.raddr2 << "]" << std::endl;
 
-  num_instrs++;
   curr_file.write((char*)&curr_instr, sizeof(PTSInstrTrace));
 
-  if (num_instrs == max_instrs) {
+  if (num_instrs - skip_instrs == max_instrs) {
     std::cout << "Max number of instruction reached" << std::endl;
     exit(0);
   }

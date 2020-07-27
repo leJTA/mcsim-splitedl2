@@ -13,7 +13,7 @@ TOOLS_DIR = ..
 PIN_DYNAMIC = -ldl
 
 PIN_CXXFLAGS   = -DBIGARRAY_MULTIPLIER=1 -DUSING_XED $(DBG)
-PIN_CXXFLAGS  += -fno-strict-aliasing -I$(PIN_HOME)/Include -I$(PIN_HOME)/InstLib
+PIN_CXXFLAGS  += -fno-strict-aliasing -I$(PIN_HOME)/Include -I$(PIN_HOME)/InstLib -ggdb
 PIN_LPATHS     = -L$(PIN_HOME)/Lib/ -L$(PIN_HOME)/ExtLib/
 PIN_LDFLAGS    = $(DBG)
 
@@ -41,7 +41,7 @@ PIN_LDFLAGS += $(PIN_SOFLAGS)
 PIN_LIBS = $(PIN_BASE_LIBS) -lpin -lpindwarf $(PIN_BASE_LIBS_MAC)
 PIN_LDFLAGS +=  ${PIN_LPATHS}
 
-LIBS += -L/usr/local/lib -lsnappy
+LIBS += -L/usr/local/lib
 INCS += -I/usr/local/include
 
 ifeq ($(TAG),dbg)
