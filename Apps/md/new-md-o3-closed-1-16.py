@@ -12,9 +12,9 @@ pts.skip_all_instrs           = false
 pts.simulate_only_data_caches = false
 pts.show_l2_stat_per_interval = false
 
-pts.num_hthreads             = 10
+pts.num_hthreads             = 4
 pts.num_hthreads_per_l1$     = 1
-pts.num_l1$_per_l2$          = 10
+pts.num_l1$_per_l2$          = 4
 pts.num_mcs                  = 1
 # display simulation statistics when every pts.print_interval
 # instruction is executed.
@@ -46,8 +46,8 @@ pts.o3core.o3rob_max_size      = 64
 pts.o3core.max_issue_width     = 8
 pts.o3core.max_commit_width    = 8
 
-pts.l1i$.num_sets           = 4
-pts.l1i$.num_ways           = 4
+pts.l1i$.num_sets           = 64
+pts.l1i$.num_ways           = 8
 # which part of the address is mapped into a set
 pts.l1i$.set_lsb            = 6
 pts.l1i$.process_interval   = 10
@@ -57,8 +57,8 @@ pts.l1i$.to_l2_t            = 20
 pts.l1i$.num_sets_per_subarray = 8
 pts.l1i$.always_hit         = false
 
-pts.l1d$.num_banks          = 4
-pts.l1d$.num_sets           = 4
+pts.l1d$.num_banks          = 64
+pts.l1d$.num_sets           = 8
 pts.l1d$.num_ways           = 4
 pts.l1d$.set_lsb            = 6
 pts.l1d$.process_interval   = 10
@@ -67,8 +67,8 @@ pts.l1d$.to_l2_t            = 40
 pts.l1d$.num_sets_per_subarray = 8
 pts.l1d$.always_hit         = false
 
-pts.l2i$.num_sets            = 32
-pts.l2i$.num_ways            = 4
+pts.l2i$.num_sets            = 768
+pts.l2i$.num_ways            = 20
 pts.l2i$.set_lsb             = 6
 pts.l2i$.process_interval    = 10
 pts.l2i$.to_l1_t             = 40
@@ -79,8 +79,8 @@ pts.l2i$.num_flits_per_packet  = 3
 pts.l2i$.num_sets_per_subarray = 16
 pts.l2i$.always_hit          = false
 
-pts.l2d$.num_sets            = 480
-pts.l2d$.num_ways            = 4
+pts.l2d$.num_sets            = 11520
+pts.l2d$.num_ways            = 20
 pts.l2d$.set_lsb             = 6
 pts.l2d$.process_interval    = 10
 pts.l2d$.to_l1_t             = 40

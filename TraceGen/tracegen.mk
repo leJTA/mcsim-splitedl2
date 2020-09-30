@@ -4,7 +4,7 @@ SHELL = /bin/sh
 
 default: all
 
-TARGET = intel64
+# TARGET = ia32e
 TOOLS_DIR = ..
 #include $(TOOLS_DIR)/makefile.gnu.config
 # Select static or dynamic linking for tool
@@ -13,7 +13,7 @@ TOOLS_DIR = ..
 PIN_DYNAMIC = -ldl
 
 PIN_CXXFLAGS   = -DBIGARRAY_MULTIPLIER=1 -DUSING_XED $(DBG)
-PIN_CXXFLAGS  += -fno-strict-aliasing -I$(PIN_HOME)/Include -I$(PIN_HOME)/InstLib -ggdb
+PIN_CXXFLAGS  += -fno-strict-aliasing -I$(PIN_HOME)/Include -I$(PIN_HOME)/InstLib
 PIN_LPATHS     = -L$(PIN_HOME)/Lib/ -L$(PIN_HOME)/ExtLib/
 PIN_LDFLAGS    = $(DBG)
 
@@ -22,8 +22,8 @@ PIN_KIT ?= ../../..
 
 XEDKIT        = $(PIN_KIT)/extras/xed-$(TARGET_LONG)
 PIN_LPATHS   += -L$(XEDKIT)/lib -L$(PIN_KIT)/$(TARGET_LONG)/lib -L$(PIN_KIT)/$(TARGET_LONG)/lib-ext
-PIN_CXXFLAGS += -I$(XEDKIT)/include -I$(PIN_KIT)/extras/components/include \
-                -I$(PIN_KIT)/source/include/pin -I$(PIN_KIT)/source/include/pin/gen
+PIN_CXXFLAGS += -I$(XEDKIT)/include/xed -I$(PIN_KIT)/extras/components/include -I$(PIN_KIT)/extras/crt/include \
+                -I$(PIN_KIT)/extras/crt/include/kernel/uapi -I$(PIN_KIT)/source/include/pin -I$(PIN_KIT)/source/include/pin/gen
 VSCRIPT_DIR = $(PIN_KIT)/source/include/pin
 
 PIN_BASE_LIBS := 
@@ -38,10 +38,10 @@ PIN_CXXFLAGS += $(OPT)
 PIN_SOFLAGS = -shared -Wl,-Bsymbolic -Wl,--version-script=$(VSCRIPT_DIR)/pintool.ver
 PIN_LDFLAGS += $(PIN_SOFLAGS)
 
-PIN_LIBS = $(PIN_BASE_LIBS) -lpin -lpindwarf $(PIN_BASE_LIBS_MAC)
+PIN_LIBS = -lpin $(PIN_BASE_LIBS) $(PIN_BASE_LIBS_MAC)
 PIN_LDFLAGS +=  ${PIN_LPATHS}
 
-LIBS += -L/usr/local/lib
+LIBS += -L/usr/local/lib -lsnappy
 INCS += -I/usr/local/include
 
 ifeq ($(TAG),dbg)
@@ -57,7 +57,7 @@ CXXFLAGS_COMMON = -Wno-unknown-pragmas $(DBG) $(OPT)
 #CC  = gcc -m32
 CXX = g++
 CC  = gcc
-PINFLAGS =
+PINFLAGS = 
 
 #SRCS_COMMON  = MTS.cc PTSComponent.cc PTSCache.cc PTSXbar.cc PTSDirectory.cc \
 #               PTSMemoryController.cc PTSTLB.cc

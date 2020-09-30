@@ -1,3 +1,3 @@
 #!/bin/bash
 
-make TOOLS_DIR=$HOME/pin/source/tools $1 -j
+make TOOLS_DIR=$HOME/pin/source/tools -j $1
