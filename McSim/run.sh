@@ -1,7 +1,7 @@
 #/bin/bash
 
 tmp="120807"
-echo"" > output/results.csv
+echo -n "" > output/results.csv
 for str in  186024 148294 199 120807
 do 
 echo "==================================================================="
@@ -13,10 +13,10 @@ echo "[$str simulated]"
 echo "==================================================================="
 tmp=$str
 
-cat output/$str.out | grep "L1\$I\[000\] : RD" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1}' >> output/results.csv #L1I RD
-cat output/$str.out | grep "L1\$D\[000\] : RD" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1}' >> output/results.csv #L1D RD
-cat output/$str.out | grep "L2\$ \[000\] : RD" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1}' >> output/results.csv #L2 RD
-cat output/$str.out | grep "L2\$ \[000\] : WR" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1}' >> output/results.csv #L2 WR
-echo "\n" >> output/results.csv
+cat output/$str.out | grep "L1\$I\[000\] : RD" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1 ","}' | xargs -I {} -t echo -n {} >> output/results.csv #L1I RD
+cat output/$str.out | grep "L1\$D\[000\] : RD" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1 ","}' | xargs -I {} -t echo -n {} >> output/results.csv #L1D RD
+cat output/$str.out | grep "L2\$ \[000\] : RD" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1 ","}' | xargs -I {} -t echo -n {} >> output/results.csv #L2 RD
+cat output/$str.out | grep "L2\$ \[000\] : WR" | awk -F "[()]" '{print $4}' | awk -F "," '{print $2 "," $1}' | xargs -I {} -t echo -n {} >> output/results.csv #L2 WR
+printf "\n" >> output/results.csv
 
 done
