@@ -12,9 +12,9 @@ pts.skip_all_instrs           = false
 pts.simulate_only_data_caches = false
 pts.show_l2_stat_per_interval = false
 
-pts.num_hthreads             = 4
+pts.num_hthreads             = 8
 pts.num_hthreads_per_l1$     = 1
-pts.num_l1$_per_l2$          = 4
+pts.num_l1$_per_l2$          = 8
 pts.num_mcs                  = 1
 # display simulation statistics when every pts.print_interval
 # instruction is executed.
@@ -68,7 +68,7 @@ pts.l1d$.num_sets_per_subarray = 8
 pts.l1d$.always_hit         = false
 
 pts.l2$.num_sets            = 12288
-pts.l2$.num_ways            = 20
+pts.l2$.num_ways            = 10
 pts.l2$.set_lsb             = 6
 pts.l2$.process_interval    = 10
 pts.l2$.to_l1_t             = 40
