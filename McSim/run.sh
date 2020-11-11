@@ -1,12 +1,12 @@
 #/bin/bash
 
-tmp="120807"
+tmp="35570"
 echo -n "" > output/results.csv
-for str in  186024 148294 199 120807
-do 
+for str in 24465 35570  # 3668 1408 5293 340 24101 27309 4249 2884
+do
 echo "==================================================================="
 echo "[Simulating $str]"
-sed -i "s/$tmp/$str/g" ../Apps/list/run-trace.py
+sed -i "s/$tmp.trace/$str.trace/g" ../Apps/list/run-trace.py
 echo "Command : ./launch_mcsim.sh trace $1 | grep "\[000\]" > output/$str.out"
 ./launch_mcsim.sh trace $1 | grep "\[000\]" > output/$str.out
 echo "[$str simulated]"

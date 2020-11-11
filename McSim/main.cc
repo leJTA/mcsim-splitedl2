@@ -457,7 +457,7 @@ int main(int argc, char * argv[])
         pts_m->uint32_t_val = htid_to_tid[ret.first];
         pts_m->uint64_t_val = ret.second;
       // if (ret.second >= 12100000)
-      //  cout << "resume  tid = " << ret.first << ", pid = " << curr_pid << ", curr_time = " << ret.second << endl;
+        //cout << "resume  tid = " << ret.first << ", pid = " << curr_pid << ", curr_time = " << ret.second << endl;
         break;
       }
       case pts_add_instruction:
@@ -480,7 +480,7 @@ int main(int argc, char * argv[])
             ptsinstr->raddr + (ptsinstr->raddr  == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->raddr2+ (ptsinstr->raddr2 == 0 ? 0 : ((real_pid << addr_offset_lsb) + (real_pid << interleave_base_bit))),
             ptsinstr->rlen,
-            ptsinstr->ip,// + ((((uint64_t)(real_pid)) << addr_offset_lsb) + (((uint64_t)(real_pid)) << interleave_base_bit)),
+            ptsinstr->ip + ((((uint64_t)(real_pid)) << addr_offset_lsb) + (((uint64_t)(real_pid)) << interleave_base_bit)),
             ptsinstr->category,
             ptsinstr->isbranch,
             ptsinstr->isbranchtaken,

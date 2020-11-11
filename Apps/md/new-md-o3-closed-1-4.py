@@ -12,9 +12,9 @@ pts.skip_all_instrs           = false
 pts.simulate_only_data_caches = false
 pts.show_l2_stat_per_interval = false
 
-pts.num_hthreads             = 4
+pts.num_hthreads             = 8
 pts.num_hthreads_per_l1$     = 1
-pts.num_l1$_per_l2$          = 4
+pts.num_l1$_per_l2$          = 8
 pts.num_mcs                  = 1
 # display simulation statistics when every pts.print_interval
 # instruction is executed.
@@ -56,10 +56,10 @@ pts.l1i$.to_l2_t            = 20
 # for how many ticks a cache is used per access
 pts.l1i$.num_sets_per_subarray = 8
 pts.l1i$.always_hit         = false
+pts.l1d$.num_banks          = 4
 
-pts.l1d$.num_banks          = 64
-pts.l1d$.num_sets           = 8
-pts.l1d$.num_ways           = 4
+pts.l1d$.num_sets           = 64
+pts.l1d$.num_ways           = 8
 pts.l1d$.set_lsb            = 6
 pts.l1d$.process_interval   = 10
 pts.l1d$.to_lsu_t           = 4 

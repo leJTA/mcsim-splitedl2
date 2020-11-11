@@ -685,6 +685,10 @@ CacheL2::CacheL2(
     uint32_t num_,
     McSim * mcsim_)
  :Cache(type_, num_, mcsim_),
+  num_wr_miss_from_l1i(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
+  num_rd_miss_from_l1i(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
+  num_wr_miss_from_l1d(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
+  num_rd_miss_from_l1d(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
   l2_to_l1_t  (get_param_uint64("to_l1_t", 45)),
   l2_to_dir_t (get_param_uint64("to_dir_t", 90)),
   l2_to_xbar_t(get_param_uint64("to_xbar_t", 90)),
@@ -1464,6 +1468,8 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
         // see if cache hits
         num_rd_access++;
 
+        auto comp = req_lqe->from.top();
+
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
         {
@@ -1553,10 +1559,20 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
             break;
           }
         }
+        if (hit == false) {
+          if (comp->type == ct_cachel1d) {
+            num_rd_miss_from_l1d[comp->num]++;
+          }
+          else if (comp->type == ct_cachel1i) {
+            num_rd_miss_from_l1i[comp->num]++;
+          }
+        }
       }
       else if (etype == et_write)
       {
         num_wr_access++;
+
+        auto comp = req_lqe->from.top();
 
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
@@ -1700,6 +1716,14 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
             //tags[set].push_back(*set_iter);
             //tags[set].erase(set_iter);
             break;
+          }
+        }
+        if (hit == false) {
+          if (comp->type == ct_cachel1d) {
+            num_wr_miss_from_l1d[comp->num]++;
+          }
+          else if (comp->type == ct_cachel1i) {
+            num_wr_miss_from_l1i[comp->num]++;
           }
         }
       }
