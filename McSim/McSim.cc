@@ -188,7 +188,7 @@ McSim::McSim(PthreadTimingSimulator * pts_)
   use_rbol      = pts->get_param_str("pts.use_rbol") == "true" ? true : false;
   is_asymmetric = pts->get_param_str("is_asymmetric") == "true" ? true : false;
 
-  uint32_t num_threads_per_l1_cache   = pts->get_param_uint64("pts.num_hthreads_per_l1$", 4);
+  num_threads_per_l1_cache   = pts->get_param_uint64("pts.num_hthreads_per_l1$", 4);
   assert(use_o3core == false || num_threads_per_l1_cache == 1);
   uint32_t num_l1_caches_per_l2_cache = pts->get_param_uint64("pts.num_l1$_per_l2$", 2);
   uint32_t num_mcs                    = pts->get_param_uint64("pts.num_mcs", 2);

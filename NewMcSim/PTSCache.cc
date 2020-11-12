@@ -685,6 +685,10 @@ CacheL2::CacheL2(
     uint32_t num_,
     McSim * mcsim_)
  :Cache(type_, num_, mcsim_),
+  num_wr_miss_from_l1i(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
+  num_rd_miss_from_l1i(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
+  num_wr_miss_from_l1d(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
+  num_rd_miss_from_l1d(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
   l2_to_l1_t  (get_param_uint64("to_l1_t", 45)),
   l2_to_dir_t (get_param_uint64("to_dir_t", 90)),
   l2_to_xbar_t(get_param_uint64("to_xbar_t", 90)),
@@ -732,6 +736,16 @@ CacheL2::~CacheL2()
     cout << "  -- L2$" << ((type == ct_cachel2d || type == ct_cachel2d_t1 || type == ct_cachel2d_t2) ? "D[" : "I[") << setw(3) << num << "] : WR (miss, access)=( "
       << setw(10) << num_wr_miss << ", " << setw(10) << num_wr_access << ")= "
       << setw(6) << setiosflags(ios::fixed) << setprecision(2) << 100.00*num_wr_miss/num_wr_access << "%" << endl;
+  }
+
+  for (int i = 0; i < cachel1i.size(); ++i) {
+    cout << "  -- L2$" << ((type == ct_cachel2d || type == ct_cachel2d_t1 || type == ct_cachel2d_t2) ? "D[" : "I[") << setw(3) << num << "] : RD miss from L1$i ["  << setw(3) << i  << "] : " << num_rd_miss_from_l1i[i] << endl;
+    cout << "  -- L2$" << ((type == ct_cachel2d || type == ct_cachel2d_t1 || type == ct_cachel2d_t2) ? "D[" : "I[") << setw(3) << num << "] : WR miss from L1$i ["  << setw(3) << i  << "] : " << num_wr_miss_from_l1i[i] << endl; 
+  }
+
+  for (int i = 0; i < cachel1d.size(); ++i) {
+    cout << "  -- L2$" << ((type == ct_cachel2d || type == ct_cachel2d_t1 || type == ct_cachel2d_t2) ? "D[" : "I[") << setw(3) << num << "] : RD miss from L1$d ["  << setw(3) << i  << "] : " << num_rd_miss_from_l1d[i] << endl;
+    cout << "  -- L2$" << ((type == ct_cachel2d || type == ct_cachel2d_t1 || type == ct_cachel2d_t2) ? "D[" : "I[") << setw(3) << num << "] : WR miss from L1$d ["  << setw(3) << i  << "] : " << num_wr_miss_from_l1d[i] << endl; 
   }
 
   if ((type == ct_cachel2d || type == ct_cachel2d_t1 || type == ct_cachel2d_t2)
@@ -1474,6 +1488,8 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
         // see if cache hits
         num_rd_access++;
 
+        Component* comp;
+
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
         {
@@ -1563,10 +1579,20 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
             break;
           }
         }
+        if (hit == false) {
+          if (comp->type == ct_cachel1d) {
+            num_rd_miss_from_l1d[comp->num]++;
+          }
+          else if (comp->type == ct_cachel1i) {
+            num_rd_miss_from_l1i[comp->num]++;
+          }
+        }
       }
       else if (etype == et_write)
       {
         num_wr_access++;
+
+        Component* comp;
 
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
@@ -1710,6 +1736,14 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
             //tags[set].push_back(*set_iter);
             //tags[set].erase(set_iter);
             break;
+          }
+        }
+        if (hit == false) {
+          if (comp->type == ct_cachel1d) {
+            num_wr_miss_from_l1d[comp->num]++;
+          }
+          else if (comp->type == ct_cachel1i) {
+            num_wr_miss_from_l1i[comp->num]++;
           }
         }
       }

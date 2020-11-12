@@ -134,6 +134,7 @@ namespace PinPthread
       bool     is_race_free_application;
       uint32_t max_acc_queue_size;
       uint32_t num_hthreads;
+      uint32_t num_threads_per_l1_cache;
       uint64_t print_interval;
       bool     use_o3core;
       bool     use_rbol;

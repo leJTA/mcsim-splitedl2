@@ -159,6 +159,12 @@ namespace PinPthread
       //std::vector< std::list< L2Entry > > tags;  // address + coherence state of a set-associative cache
       L2Entry *** tags;  // address + coherence state of a set-associative cache
 
+      // stat
+      std::vector<uint64_t> num_wr_miss_from_l1i;
+      std::vector<uint64_t> num_rd_miss_from_l1i;
+      std::vector<uint64_t> num_wr_miss_from_l1d;
+      std::vector<uint64_t> num_rd_miss_from_l1d;
+
     //private:
       const uint32_t l2_to_l1_t;
       const uint32_t l2_to_dir_t;

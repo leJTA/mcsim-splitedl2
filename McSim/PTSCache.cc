@@ -685,10 +685,10 @@ CacheL2::CacheL2(
     uint32_t num_,
     McSim * mcsim_)
  :Cache(type_, num_, mcsim_),
-  num_wr_miss_from_l1i(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
-  num_rd_miss_from_l1i(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
-  num_wr_miss_from_l1d(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
-  num_rd_miss_from_l1d(get_param_uint64("num_hthreads") / get_param_uint64("num_threads_per_l1_cache")),
+  num_wr_miss_from_l1i(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
+  num_rd_miss_from_l1i(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
+  num_wr_miss_from_l1d(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
+  num_rd_miss_from_l1d(mcsim_->get_num_hthreads() / mcsim_->num_threads_per_l1_cache),
   l2_to_l1_t  (get_param_uint64("to_l1_t", 45)),
   l2_to_dir_t (get_param_uint64("to_dir_t", 90)),
   l2_to_xbar_t(get_param_uint64("to_xbar_t", 90)),
@@ -736,6 +736,16 @@ CacheL2::~CacheL2()
     cout << "  -- L2$ [" << setw(3) << num << "] : WR (miss, access)=( "
       << setw(10) << num_wr_miss << ", " << setw(10) << num_wr_access << ")= "
       << setw(6) << setiosflags(ios::fixed) << setprecision(2) << 100.00*num_wr_miss/num_wr_access << "%" << endl;
+  }
+  
+  for (int i = 0; i < cachel1i.size(); ++i) {
+    cout << "  -- L2$ [" << setw(3) << num << "] : RD miss from L1$i ["  << setw(3) << i  << "] : " << num_rd_miss_from_l1i[i] << endl;
+    cout << "  -- L2$ [" << setw(3) << num << "] : WR miss from L1$i ["  << setw(3) << i  << "] : " << num_wr_miss_from_l1i[i] << endl; 
+  }
+
+  for (int i = 0; i < cachel1d.size(); ++i) {
+    cout << "  -- L2$ [" << setw(3) << num << "] : RD miss from L1$d ["  << setw(3) << i  << "] : " << num_rd_miss_from_l1d[i] << endl;
+    cout << "  -- L2$ [" << setw(3) << num << "] : WR miss from L1$d ["  << setw(3) << i  << "] : " << num_wr_miss_from_l1d[i] << endl; 
   }
 
   if (num_ev_coherency > 0 || num_ev_capacity > 0 || num_coherency_access > 0 || num_upgrade_req > 0)
@@ -1468,7 +1478,7 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
         // see if cache hits
         num_rd_access++;
 
-        auto comp = req_lqe->from.top();
+        Component* comp = req_lqe->from.top();
 
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
@@ -1572,7 +1582,7 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
       {
         num_wr_access++;
 
-        auto comp = req_lqe->from.top();
+        Component* comp = req_lqe->from.top();
 
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
