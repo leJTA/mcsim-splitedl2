@@ -1488,7 +1488,7 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
         // see if cache hits
         num_rd_access++;
 
-        Component* comp;
+        Component* comp = req_lqe->from.top();;
 
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
@@ -1592,7 +1592,7 @@ uint32_t CacheL2::process_event(uint64_t curr_time)
       {
         num_wr_access++;
 
-        Component* comp;
+        Component* comp = req_lqe->from.top();
 
         //for (set_iter = tags[set].begin(); set_iter != tags[set].end(); ++set_iter)
         for (idx = 0; idx < num_ways; idx++)
